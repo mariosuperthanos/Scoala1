@@ -2,41 +2,38 @@
 using namespace std;
 
 int main() {
-  int n,i,arr[1020], aux;
+  int n,i, aux,arr[1002], j=0, min=0;
   bool saFacutSchimbare = true;
-  // Eroare
+  cout<<"n= ";
   cin>>n;
-  // citirea array
   for(i=0;i<n;i++){
     cin>>arr[i];
   }
-  cout<<"Array-ul introdus este: ";
-  for(i=0;i<n;i++){
-    cout<<arr[i]<<" ";
-  } 
-  cout<<endl;
-  // n=3;
-  // int arr[3]={6,2,8};
-  // bubleshort
   // daca sa facut o schimbare ultima verificare
-  while(saFacutSchimbare==true){
-    saFacutSchimbare=false;
-    // verificam daca puteam face o schimbare
-    for(i=0;i<n-1;i++){
-      if(arr[i]>arr[i+1]){
-        aux=arr[i];
-        arr[i]=arr[i+1];
-        arr[i+1]=aux;
-        saFacutSchimbare=true;
+  while(true){
+    min=j;
+    // cautam min
+    for(i=j;i<n-1;i++){
+      if(arr[min]>arr[i+1]){
+        // este necesara pozitia lui min pentru a da swap
+        min=i+1;
       }
     }
+    // swap
+    if(j!=min){
+      aux=arr[j];
+      arr[j]=arr[min];
+      arr[min]=aux;
+      j++;
+    } else{
+      break;
+    }
   }
-  cout<<"Array-ul ordonat este: ";
   for(i=0;i<n;i++){
-    cout<< arr[i]<<" ";
+    cout<<arr[i]<<" ";
   } 
   // Time Complexity: O(n^2)=O(n*nr de schimbari)
   // Size Complexity: O(n)
 
-  return 0;
+return 0;
 }
