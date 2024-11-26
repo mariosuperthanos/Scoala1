@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+  int matrice[10][10]
+  for(int rand=0;rand<9;rand++){
+    for(int coloana=0;coloana<9;coloana++){
+      matrice[rand][coloana]=4;
+    } 
+  }  
+  for(int rand=0;rand<9;rand++){
+    for(int coloana=0;coloana<9;coloana++){
+      matrice[rand][coloana]=4;
+      // mirror
+      matrice[8-i][8-coloana]=4;
+    } 
+  }
+  return 0;
+}
