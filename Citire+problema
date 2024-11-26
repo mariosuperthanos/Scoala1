@@ -1,0 +1,43 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+//   int matrice[1000][1000],n,m;
+  
+//   cin>>n;
+//   cin>>m;
+//   for(int rand=0;rand<n;rand++){
+//     cout<<"linia "<<rand<<endl;
+//     for(int coloana=0;coloana<m;coloana++){
+//       cout<<"coloana "<<coloana<<": ";
+//       cin>>matrice[rand][coloana];
+//     } 
+//   }
+//   for(int rand=0;rand<n;rand++){
+//       cout<<endl;
+//     for(int coloana=0;coloana<n;coloana++){
+//       cout<<matrice[rand][coloana]<<" ";
+//     } 
+//   }
+  int n=6,k=7;
+//   cin>>n,k;
+  int matrice[n][n],m,diferenta;
+  diferenta=0;
+  //primul rand:k,k-1,k-2,k-3
+  // al doilea rand: 2k+1,2k,2k-1,2k-2
+  
+  for(int rand=0;rand<n;rand++){ // 0
+    for(int coloana=0;coloana<n;coloana++){
+      matrice[rand][coloana]=(rand+1)*k-coloana+diferenta; // (rand+1)*k-coloana+diferenta
+    } 
+    diferenta++;
+  }
+  
+  for(int rand=0;rand<n;rand++){
+    cout<<endl;
+    for(int coloana=0;coloana<n;coloana++){
+      cout<<matrice[rand][coloana]<<" ";
+    } 
+  }
+  return 0;
+}
