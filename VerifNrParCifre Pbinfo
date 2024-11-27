@@ -1,0 +1,56 @@
+// https://www.pbinfo.ro/probleme/291/verifnrparcifre
+#include <iostream>
+using namespace std;
+
+int main() {
+    int vector[100],n, count=1,rez=false;
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>vector[i];
+    }
+    for(int i=0;i<n;i++){
+        while(vector[i]/10!=0){
+            vector[i]=vector[i]/10;
+            count+=1;
+        }
+        if(count%2!=0){
+            rez=true;
+            break;
+        }
+        count=1;
+    }
+    if(rez==true){
+        cout<<"NU";
+    }else{
+        cout<<"DA";
+    }
+    return 0;
+}
+// cu test fara cin:
+#include <iostream>
+using namespace std;
+
+int main() {
+    int vector[100]={2820, 82, 65, 1026, 84},n=5, count=1,rez=false;
+    // cin>>n;
+    // for(int i=0;i<n;i++){
+    //     cin>>vector[i];
+    // }
+    for(int i=0;i<n;i++){
+        while(vector[i]/10!=0){
+            vector[i]=vector[i]/10;
+            count+=1;
+        }
+        if(count%2!=0){
+            rez=true;
+            break;
+        }
+        count=1;
+    }
+    if(rez==true){
+        cout<<"NU";
+    }else{
+        cout<<"DA";
+    }
+    return 0;
+}
