@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int ma[100][100], n=9, k=4, diferenta=0;
+
+    // Citirea dimensiunilor matricei
+    // cout << "Latura patratului: ";
+    // cin >> n;
+    // cout << "k (<n): ";
+    // cin >> k;
+
+    // parcurgerea cu 2
+    for (int rand = 0; rand < n; rand++) {
+        for (int coloana = 0; coloana < n; coloana++) {
+            ma[rand][coloana]=2;
+        }
+    }
+
+    for (int rand = 0; rand < k; rand++) {
+        for (int coloana = 0; coloana < k; coloana++) {
+            ma[rand][coloana-diferenta]=k;
+            // mirror
+            ma[n-rand-1][n-coloana-1+diferenta]=k;
+            // test
+            cout << "Matricea introdusă este:" << endl;
+            for (int g = 0; g < n; g++) {
+                for (int y = 0; y < n; y++) {
+                    cout << ma[g][y] << " ";
+                }
+                cout << endl;
+            }
+        }
+        diferenta++;
+    }
+
+    // Afișarea matricei
+    cout << "Matricea introdusă este:" << endl;
+    for (int rand = 0; rand < n; rand++) {
+        for (int coloana = 0; coloana < n; coloana++) {
+            cout << ma[rand][coloana] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
