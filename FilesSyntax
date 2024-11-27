@@ -1,0 +1,26 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+// declararea fisierelor
+// fin da replace la cin
+// fout da replace la cout
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+int main()
+{
+
+    int a , b, s;
+    fin >> a >> b;
+    // inchid fisierul dupa terminarea sectiunii cu citirea datelor
+    fin.close();
+    s = a + b;
+
+    fout << s;
+    // inchid fisierul dupa terminarea sectiunii cu afisarea datelor
+    fout.close();
+
+    return 0;
+}
