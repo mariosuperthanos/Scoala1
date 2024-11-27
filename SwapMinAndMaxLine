@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int ma[100][100], n, m, min = ma[0][0], randMin = 0, max = ma[0][0], randMax, aux;
+    cout<<"randuri: ";
+    cin >> n;
+    cout<<"coloane: ";
+    cin >> m;
+
+    for(int rand=0;rand<n;rand++){
+        cout<<"linia "<<rand<<endl;
+        for(int coloana=0;coloana<m;coloana++){
+            cout<<"coloana "<<coloana<<": ";
+            cin>>ma[rand][coloana];
+        } 
+    }
+
+    for (int rand = 0; rand < n; rand++)
+    {
+        for (int coloana = 0; coloana < m; coloana++)
+        {
+            if (min > ma[rand][coloana])
+            {
+                min = ma[rand][coloana];
+                randMin = rand;
+            }
+            if (max < ma[rand][coloana])
+            {
+                max = ma[rand][coloana];
+                randMax = rand;
+            }
+        }
+    }
+    for (int coloana = 0; coloana < n; coloana++)
+    {
+        // aux e variabila pentru a face swap la randuri, pentru a economisi spartiu, o alta abordare fiind alegerea unui vector
+        aux = ma[randMin][coloana];
+        ma[randMin][coloana] = ma[randMax][coloana];
+        ma[randMax][coloana] = aux;
+
+        // test - pentru debugging
+        // cout << "Matricea introdusă este:" << endl;
+        // for (int g = 0; g < n; g++)
+        // {
+        //     for (int y = 0; y < m; y++)
+        //     {
+        //         cout << ma[g][y] << " ";
+        //     }
+        //     cout << endl;
+        // }
+    }
+
+    // Afișarea matricei
+    cout << "Matricea introdusă este:" << endl;
+    for (int rand = 0; rand < n; rand++)
+    {
+        for (int coloana = 0; coloana < n; coloana++)
+        {
+            cout << ma[rand][coloana] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
