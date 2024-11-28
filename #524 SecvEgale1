@@ -1,0 +1,48 @@
+https://www.pbinfo.ro/probleme/524/secvegale1
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+  int arr[1002], i, n, st=0, dr=0,memo[100],memoSize=0, j,maxLength=-1, verify=0;
+  cin>>n;
+  for(i=0;i<n;i++){
+    cin>>arr[i];
+  }
+  for(i=0;i<n;i++){
+    // reset la verify
+    verify=0;
+    // verificarea in memo
+    for(int k=0;k<memoSize;k++){
+      if(memo[k]==arr[i]){
+        verify=1;
+        break;
+      }
+    }
+    // skip daca exista in memo
+    if(verify){
+      continue;
+    }
+    // daca nu e in memo, cautam cea mai mare lungime a secventei care incepe si se termina cu nr. respectiv
+    // si salvam elementul curent in memo
+    memo[memoSize++]=arr[i];
+    for(j=i+1;j<n;j++){
+      if(arr[j]==arr[i]){
+        // daca secventa actuala e mai mare decat maxLength
+        if(maxLength<j-i+1){
+          // update
+          dr=j;
+          st=i;
+          maxLength=dr-st+1;
+        }
+      }
+    }
+  }
+
+  st+=1;
+  dr+=1;
+  cout<<st<<" "<<dr;
+  
+}
