@@ -1,0 +1,45 @@
+// https://cdn.sepi.ro/oni2024/OJI/9/9_enunturi/9_macarie_RO.pdf
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+int main()
+{
+    int n, q, A[100], D[100], rez[100], poz[100], max, currentPosD=0;
+    fin>>n;
+    fin>>q;
+    for(int i=0;i<n;i++){
+        fin>>A[i];
+    }
+    for(int i=0;i<q;i++){
+        fin>>poz[i];
+    }
+    fin.close();
+    // aflarea max
+    for(int i=0;i<n;i++){
+        if(A[i]>max){
+            max=A[i];
+        }
+    }
+    // pentru fiecare divizor posibil
+    for(int i=1;i<=max;i++){
+        // pentru fiecare nr din A
+        for(int j=0;j<n;j++){
+            if(A[j]%i==0){
+                // adaugam divizorul( i ) in D
+                D[currentPosD++]=i;            
+            }
+        }
+    }
+    for(int i=0;i<q;i++){
+        fout<<D[poz[i]-1]<<" ";
+    }
+    fout.close();
+
+    return 0;
+}
