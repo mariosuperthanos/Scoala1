@@ -1,0 +1,33 @@
+https://www.pbinfo.ro/detalii-evaluare/54430052
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int arr[1002], i, primulImpar=0, ultimulImpar=0, n, suma=0;
+  cin>>n;
+  for(i=0;i<n;i++){
+    cin>>arr[i];
+  }
+  for (i = 0; i < n; ++i)
+  {
+    if (arr[i] % 2 == 1)
+    {
+      primulImpar = i;
+      break;
+    }
+  }
+  for (i = n - 1; i >= 0; i--)
+  {
+    if (arr[i] % 2 == 1)
+    {
+      ultimulImpar = i;
+      break;
+    }
+  }
+  for (i = primulImpar; i <= ultimulImpar; i++)
+  {
+    suma += arr[i];
+  }
+  cout<<suma;
+}
