@@ -1,0 +1,97 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+int main()
+{
+    // st arata pt cerinta 1, la ce numar voi se incepe intervalul
+    // dr arata pt cerinta 1, la ce numar voi se termina intervalul
+    // j e pointer pentru a veghea 
+    // curent stanga: cati munti mai mici decat cel actual sunt in stanga santinelei
+    // curent dreapta: cati munti mai mici decat cel actual sunt in dreapta santinelei
+    // curent lungime: cati munti consecutivi sunt vegheati in secventa respectiv
+    int N,K,arr[100], cerinta,st,dr,j,curentStanga=0,curentDreapta=0,curentLungime,max=-1,esteVegheat[100],maxMunte=-1,pozMax=0,count=0, observatCurent=0;
+    fin>>cerinta;
+    fin>>N;
+    fin>>K;
+    int NEOBSERVATI=N;
+    for(int i=0;i<N;i++){
+        fin>>arr[i];
+    }
+    fin.close();
+
+    if(cerinta==1){
+        for(int i=0;i<=K;i++){
+            // punem santinela pe index-ul i
+            if(i-K<0){
+                st=0;
+            }else{
+                st=i-K;
+            }
+            j=i-1;
+            dr=i+K;
+            int deComparat = arr[i];
+            // ma uit in stanga atat timp cat nu vad un munte mai mare
+            while(j>=st && arr[j]<deComparat) {
+                curentStanga+=1;
+                j--;
+            }
+            j=i+1;
+            // ma uit in dreapta atat timp cat nu vad un munte mai mare
+            while(j<=dr && arr[j]<deComparat) {
+                curentDreapta+=1;
+                j++;
+            }
+            curentLungime += curentDreapta+curentStanga;
+            if(max<curentLungime){
+                max=curentLungime;
+            }
+            curentLungime=1;
+            curentStanga=0;
+            curentDreapta=0;
+        }
+        fout<<max;
+    } else if(cerinta==2){
+        for(int i=0;i<N;i++){
+            esteVegheat[i]=false;
+        }
+        // verificam cati munti sunt NEOBSERVATI: 
+        while(NEOBSERVATI!=0){
+            // aflam max de array
+            for(int i=0;i<N;i++){
+                if(maxMunte<arr[i] && esteVegheat[i]==false){
+                    maxMunte=arr[i];
+                    pozMax=i;
+                }
+            }
+            // update la array:
+            if(pozMax-K<0){
+                st=0;
+            }else{
+                st=pozMax-K;
+            }
+            for(int i=st;i<=pozMax+K && i<N;i++){
+                if(esteVegheat[i]!=true){
+                    esteVegheat[i]=true;
+                    observatCurent+=1;
+                }
+            }
+            NEOBSERVATI -= observatCurent;
+            // reset
+            observatCurent=0;
+            maxMunte=-1;
+            // updatam nr de santinele
+            count+=1;
+        }
+        fout<<count;
+    }
+    fout.close();
+
+    return 0;
+
+}
