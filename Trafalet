@@ -1,0 +1,96 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+// 1 2 1
+// 3 5 2
+// 1 2 4
+// fie S un array cu suma elementelor de pe acelasi rand a coloanelor de la Cn la Ck; n < k;n si k < M (M - nr total de coloane)
+// secventa maxima al lui S reprezinta suma maxima a submatricei care are proprietatea cu colturile(stanga sus/dreapta jos) sunt pe coloanele n si k
+// secventa maxima  al lui S se poate calcula prin Kadane's algortihm cu O(n)
+
+int main()
+{
+    int matrice[100][100], N, M, paritate = 1, coloanaCurenta[100], panaAcum = 0, max=INT_MIN,maxSubsecventa=INT_MIN;
+    fin >> N;
+    fin >> M;
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < M; j++)
+        {
+            fin >> matrice[i][j];
+        }
+    }
+    fin.close();
+
+    // pentru fiecare coloana
+    for (int i = 0; i < M; i++)
+    {   
+        // resetare la array
+        for (int y = 0; y < N; y++)
+        {
+            coloanaCurenta[y] = 0;
+        }
+        // pentru fiecare coloana
+        for (int j = i; j < M; j++)
+        {
+            // updatam suma
+            for (int k = 0; k < N; k++)
+            {
+                if ((paritate + k) % 2 == 0)
+                {
+                    // pentru patratelele negre
+                    coloanaCurenta[k] += matrice[k][j] * (-1);
+                }
+                else
+                {
+                    coloanaCurenta[k] += matrice[k][j];
+                }
+            }
+            panaAcum=coloanaCurenta[0];
+            maxSubsecventa=coloanaCurenta[0];
+            // aflam max la subsecventa prin Kadane's algorithm
+            for (int k = 1; k < N; k++)
+            {
+                if (panaAcum + coloanaCurenta[k] >= coloanaCurenta[k])
+                {
+                    panaAcum = panaAcum + coloanaCurenta[k];
+                }
+                else
+                {
+                    panaAcum = coloanaCurenta[k];
+                }
+
+                if(maxSubsecventa<panaAcum){
+                    maxSubsecventa=panaAcum;
+                }
+            }
+
+            if (max < maxSubsecventa)
+            {
+                max = maxSubsecventa;
+            }
+
+            if (paritate == 1)
+            {
+                paritate = 0;
+            }
+            else
+            {
+                paritate = 1;
+            }
+            panaAcum = 0;
+        }
+    }
+    
+    fout<<max;
+    fout.close();
+
+    return 0;
+}
