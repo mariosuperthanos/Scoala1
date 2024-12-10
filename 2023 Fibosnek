@@ -1,0 +1,147 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+
+int main()
+{
+    int matrice[100][100], N, M,cerinta, fibonaci[100],fibonaciActual=0, count=0, secventeIndexes[100], secventeCurent=0, par=1,max=0, lungimeCurenta, pozSt, sum=0;
+    bool esteFibonaci = false;
+    int coloana, result=0, ultimul=0;
+    int rand;
+    fin >> cerinta;
+    fin >> N;
+    fin >> M;
+    fibonaci[fibonaciActual++]=1;
+    fibonaci[fibonaciActual]=2;
+
+    for(int i=2;i<47;i++) { 
+        fibonaci[i]=fibonaci[i-1]+fibonaci[i-2];
+    }
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < M; j++)
+        {
+            fin >> matrice[i][j];
+        }
+    }
+    fin.close();
+
+    if(cerinta==1){
+        for (coloana = 0; coloana < M; coloana++)
+        {
+            for (rand = 0; rand < N; rand++)
+            {
+                int current=matrice[rand][coloana];
+                // verificam daca current este fibonacii:
+                for(int i=0;fibonaci[i]<=current;i++){
+                    if(fibonaci[i]==current){
+                        count++;
+                        break;
+                    }
+                }
+            }
+        }
+        fout<< count;
+    } else if(cerinta==2) {
+        // un array cu lungimea fiecarei secvente fibosnek si fiecarei secvente nonfibosnek
+        // indexele 0, 2, 4,... reprezinta secvente fibosnex
+        // indexele 1, 3,5,... reprezinta secvente nonfibosnek
+        // in al doilea exemplu, array-ul obtinut va fi 2,1,5,2,2
+        // 2 numere reprezinta lungimea urmatoarei secvente fibosnek
+        // 1 numar reprezint lungimea urmatoarei secvente nonfibosnek
+        ///...
+        for (int coloana = 0; coloana < M; coloana++)
+        {
+            for (int rand = 0; rand < N; rand++)
+            {
+                esteFibonaci=false;
+                int current=matrice[rand][coloana];
+                // verificam daca current este fibonacii:'
+                if(par==true){
+                    for(int i=0;fibonaci[i]<=current;i++){
+                        if(fibonaci[i]==current){
+                            secventeIndexes[secventeCurent]++;
+                            esteFibonaci=true;
+                            break;
+                        }
+                    }
+                    if(!esteFibonaci){
+                        secventeCurent++;
+                        secventeIndexes[secventeCurent]=1;
+                        par=false;
+                        continue;
+                    }
+                }else {
+                    for(int i=0;fibonaci[i]<=current;i++){
+                        if(fibonaci[i]==current){
+                            esteFibonaci=true;
+                            break;
+                        }
+                    }
+                    if(esteFibonaci){
+                        secventeCurent++;
+                        secventeIndexes[secventeCurent]=1;
+                        par=true;
+                        continue;
+                    } else{
+                        secventeIndexes[secventeCurent]++;
+                    }
+                }
+
+
+            }
+        }
+        for(int i=0;i<=secventeCurent;i+=2){
+            lungimeCurenta=secventeIndexes[i]+secventeIndexes[i+1]+secventeIndexes[i+2];
+            if(max<lungimeCurenta) {
+                max=lungimeCurenta;
+                pozSt=i;
+            }
+        }
+        // calculez unde incepe subsecventa data
+        for(int i=0;i<pozSt;i++){
+            sum+=secventeIndexes[i];
+        }
+        for (coloana = 0; coloana < M; coloana++)
+        {
+            for (rand = 0; rand < N; rand++)
+            {
+                int actual= coloana*N+rand;
+                int current = matrice[rand][coloana];
+                // daca se afla in intervalul gasit
+                if(actual>=sum && actual<max+sum){
+                    esteFibonaci=false;
+                    // verificam daca e fibonaci
+                    for(int i=0;fibonaci[i]<=current;i++){
+                        ultimul=i;
+                        if(fibonaci[i]==current){
+                            esteFibonaci=true;
+                            continue;
+                        }
+
+                    }
+                    // daca nu e fib, atunci il transform prin rotunjire
+                    if(!esteFibonaci){
+                        if(fibonaci[ultimul+1]-current>=current-fibonaci[ultimul]){
+                            matrice[rand][coloana]=fibonaci[ultimul];
+                        } else {
+                            matrice[rand][coloana]=fibonaci[ultimul+1];
+                        }
+                    } 
+                    result+=matrice[rand][coloana];
+                }
+            }
+        }
+        fout<<result;
+    }
+    fout.close();
+
+    return 0;
+}
