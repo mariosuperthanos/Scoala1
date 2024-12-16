@@ -1,0 +1,184 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("sum.in");
+ofstream fout("sum.out");
+
+vector<vector<int>> sortare(vector<vector<int>> lista, int sizeLista)
+{
+    // bubbleshort
+    int schimbare = true;
+    int auxCol1, auxCol2;
+    while (schimbare)
+    {
+        schimbare = false;
+        for (int i = 0; i < sizeLista - 1; i++)
+        {
+            if (lista[i][0] > lista[i + 1][0])
+            {
+                // swap
+                auxCol1 = lista[i][0];
+                auxCol2 = lista[i][1];
+                lista[i][0] = lista[i + 1][0];
+                lista[i][1] = lista[i + 1][1];
+                lista[i + 1][0] = auxCol1;
+                lista[i + 1][1] = auxCol2;
+                schimbare = true;
+                break;
+            }
+        }
+    }
+
+    return lista;
+}
+
+vector<vector<int>> eticheteNrObiecte(vector<vector<int>> matrice, int n)
+{
+    vector<vector<int>> memoObiecte(200, vector<int>(2, 0));
+    int sizeRanduri = 3 * n, etichetaCurenta, elementCurent, nrObiecte, randCurent = 0, gasit = false;
+    for (int rand = 0; rand < sizeRanduri; rand++)
+    {
+        for (int coloana = 0; coloana < 9; coloana++)
+        {
+            gasit = false;
+            elementCurent = matrice[rand][coloana];
+            etichetaCurenta = elementCurent % 100;
+            nrObiecte = elementCurent / 100;
+            // verificam daca exista eticheta data in memoObiecte
+            for (int i = 0; i < randCurent; i++)
+            {
+                if (memoObiecte[i][0] == etichetaCurenta && etichetaCurenta != 0)
+                {
+                    memoObiecte[i][1] += nrObiecte;
+                    gasit = true;
+                    break;
+                }
+            }
+            if (!gasit && etichetaCurenta != 0)
+            {
+                memoObiecte[randCurent][0] = etichetaCurenta;
+                memoObiecte[randCurent][1] = nrObiecte;
+                randCurent++;
+            }
+        }
+    }
+    // sortarea in functie de etichete
+
+    memoObiecte = sortare(memoObiecte, randCurent);
+    return memoObiecte;
+}
+
+bool estePrim(int nr)
+{
+    if (nr % 2 == 0)
+    {
+        return false;
+    }
+    for (int i = 3; i <= sqrt(nr); i += 2)
+    {
+        if (nr % i == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main()
+{
+    int c, n;
+    fin >> c;
+    fin >> n;
+    int sizeRanduri = 3 * n, etichetaCurenta, elementCurent, nrObiecte, randCurent = 0, gasit = false, pointer = 0, esteFragil, rand2 = 0, coloana2 = 0;
+    vector<vector<int>> matrice(sizeRanduri, vector<int>(9, 0));
+    vector<vector<int>> reordonata(sizeRanduri + 5, vector<int>(9, 0));
+    vector<vector<int>> memoObiecte(200, vector<int>(2, 0));
+
+    for (int rand = 0; rand <= sizeRanduri; rand++)
+    {
+        for (int coloana = 0; coloana < 9; coloana++)
+        {
+            fin >> matrice[rand][coloana];
+        }
+    }
+
+    fin.close();
+
+    vector<vector<int>> eticheteOrdonate = eticheteNrObiecte(matrice, n);
+
+    if (c == 1)
+    {
+        for (int rand = 0; rand < eticheteOrdonate.size() && eticheteOrdonate[rand][0] != 0; rand++)
+        {
+            for (int coloana = 0; coloana < 2; coloana++)
+            {
+                fout << eticheteOrdonate[rand][coloana]<< " ";
+            }
+            fout<< endl;
+        }
+    }
+    else
+    {
+        //
+        for (int rand = 0; rand <= sizeRanduri; rand++)
+        {
+            for (int coloana = 0; coloana < 9; coloana++)
+            {
+                // este fragil(16 pe compartiment) sau dur(64)
+                esteFragil = estePrim(eticheteOrdonate[pointer][0]);
+                int numar = eticheteOrdonate[pointer][0]; // eticheta
+                if (esteFragil == true)
+                {
+                    if (eticheteOrdonate[pointer][1] <= 16)
+                    {
+                        numar += 100 * eticheteOrdonate[pointer][1];
+                        pointer++;
+                    }
+                    else
+                    {
+                        numar += 100 * 16;
+                        eticheteOrdonate[pointer][1] -= 16;
+                    }
+                }
+                else
+                {
+                    if (eticheteOrdonate[pointer][1] <= 64)
+                    {
+                        numar += 100 * eticheteOrdonate[pointer][1];
+                        pointer++;
+                    }
+                    else
+                    {
+                        numar += 100 * 64;
+                        eticheteOrdonate[pointer][1] -= 64;
+                    }
+                }
+                reordonata[rand2][coloana2] = numar;
+                coloana2++;
+                if (coloana2 == 9)
+                {
+                    coloana2 = 0;
+                    rand2 += 1;
+                }
+            }
+        }
+        
+        for (int rand = 0; rand <= sizeRanduri-1; rand++)
+        {
+            for (int coloana = 0; coloana < 9; coloana++)
+            {
+                fout << reordonata[rand][coloana]<< " ";
+            }
+            fout<< endl;
+        }
+    }
+
+    fout.close();
+
+    return 0;
+}
