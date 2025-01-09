@@ -1,0 +1,89 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("pergament.in");
+ofstream fout("pergament.out");
+
+int main()
+{
+    int N, K, Q, A, B, C, D, coloanaAnterior, lungimeAnterior, coloanaCurent, lungimeCurent, count=0;
+    fin >> N >> K >> Q;
+    fin >> A >> B >> C >> D;
+    fin >> coloanaAnterior >> lungimeAnterior;
+
+    vector<vector<int>> matriceQ(Q, vector<int>(3, 0));
+    vector<vector<int>> rez(N, vector<int>(K, 0));
+    // 0- neocupata
+    // 1- albastra
+
+    for (int rand = 0; rand < Q; rand++)
+    {
+        for (int coloana = 0; coloana < 3; coloana++)
+        {
+            fin >> matriceQ[rand][coloana];
+        }
+    }
+
+    fin.close();
+
+    // adaug strada vericala data
+    for (int i = coloanaAnterior - 1; i < lungimeAnterior; i++)
+    {
+        rez[0][i] = 1;
+    }
+    
+    // strazile albastre
+    for (int rand = 1; rand < N; rand++)
+    {
+        coloanaCurent = 1 + (coloanaAnterior * A + B) % K;
+        lungimeCurent = 1 + (lungimeAnterior * C + D) % (K - coloanaCurent + 1);
+        for (int i = coloanaCurent - 1; i < coloanaCurent + lungimeCurent - 1 && i<K; i++)
+        {
+            rez[rand][i] = 1;
+        }
+        coloanaAnterior = coloanaCurent;
+        lungimeAnterior = lungimeCurent;
+    }
+    // strazile rosii
+    for (int rand = 0; rand < Q; rand++)
+    {
+        int coloana = matriceQ[rand][0];
+        int randStart = matriceQ[rand][1];
+        int lungime = matriceQ[rand][2];
+        for(int i= randStart-1; i< randStart-1+lungime && i<N;i++){
+            if(rez[i][coloana-1]==1){
+                count++;
+            }
+        }
+    }
+
+    fout<< count;
+    fout.close();
+
+    return 0;
+}
+
+// #include <iostream>
+// #include <algorithm>
+// #include <fstream>
+// #include <vector>
+// #include <cmath>
+
+// using namespace std;
+
+// ifstream fin("pergament.in");
+// ofstream fout("pergament.out");
+
+// int main()
+// {
+
+//     fout<< 1;
+//     fout.close();
+
+//     return 0;
+// }
