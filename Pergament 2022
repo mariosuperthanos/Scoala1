@@ -16,7 +16,7 @@ int main()
     fin >> A >> B >> C >> D;
     fin >> coloanaAnterior >> lungimeAnterior;
 
-    vector<vector<int>> matriceQ(Q, vector<int>(3, 0));
+    vector<vector<int>> matriceQ(Q, vector<int>(2, 0));
     vector<vector<int>> rez(N, vector<int>(K, 0));
     // 0- neocupata
     // 1- albastra
@@ -67,23 +67,3 @@ int main()
 
     return 0;
 }
-
-// #include <iostream>
-// #include <algorithm>
-// #include <fstream>
-// #include <vector>
-// #include <cmath>
-
-// using namespace std;
-
-// ifstream fin("pergament.in");
-// ofstream fout("pergament.out");
-
-// int main()
-// {
-
-//     fout<< 1;
-//     fout.close();
-
-//     return 0;
-// }
