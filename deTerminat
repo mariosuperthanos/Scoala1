@@ -1,0 +1,88 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("pergament.in");
+ofstream fout("pergament.out");
+
+int main()
+{
+    int C, N, count = 0, max = -1, patrateInBisecventa, LungimeActulala = 0, nrBisecvente = 0,dr=0, current=0;
+    fin >> C;
+    fin >> N;
+
+    vector<int> sir(N);
+    vector<int> patratePerfecte(1000);
+    vector<int> pozitii(N);
+    vector<vector<int>> startEndIndexes(1000, vector<int>(3, 0));
+
+    for (int i = 2; i < 1000; i++)
+    {
+        patratePerfecte[i - 2] = i * i;
+    }
+    for (int i = 0; i < N; i++)
+    {
+        fin >> sir[i];
+    }
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; sir[i] >= patratePerfecte[j]; j++)
+        {
+            if (sir[i] % patratePerfecte[j] == 0)
+            {
+                count++;
+                pozitii[i] = 1;
+                break;
+            }
+        }
+    }
+    if (C == 1)
+    {
+        fout << N - count;
+    }
+    else
+    {
+        int start=0, countSecvente=0;
+        // fiecare nr din sir
+        for (int i = 0; i < N; i++)
+        {
+            start=i;
+            start++;
+            LungimeActulala = 0;
+            patrateInBisecventa=0;
+            for (int j = i; j < N && patrateInBisecventa != 2; j++)
+            {
+                LungimeActulala++;
+                if(pozitii[j] == 1 && pozitii[j+1] == 1){
+                    break;
+                }
+                if (pozitii[j] == 1)
+                {
+
+                    patrateInBisecventa++;
+                }
+            }
+            LungimeActulala--;
+            dr = start + LungimeActulala;
+            startEndIndexes[current][0] = start;
+            startEndIndexes[current][1] = dr;
+            current++;
+            if(max<LungimeActulala) {
+                max=LungimeActulala;
+            }
+        }
+        for(int i = 0; i<current;i++) {
+            if(startEndIndexes[i][1]-startEndIndexes[i][0]==max){
+                startEndIndexes[i][2]=1;
+                countSecvente++;
+                // 1 reprezinta faptul ca are lungime maxima
+            }
+        }
+    }
+    return 0;
+}
