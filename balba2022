@@ -1,0 +1,159 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("balba.in");
+ofstream fout("balba.out");
+
+int main()
+{
+  int X, C, count1 = 1, dubluraActuala = -1, count2 = 0, primul = true;
+  fin >> C;
+  fin >> X;
+  vector<int> cifre(X, 0);
+  vector<int> cifreCount(X, 0);
+
+  for (int i = 0; i < X; i++)
+  {
+    fin >> cifre[i];
+  }
+  fin.close();
+
+  if (C == 1)
+  {
+    for (int i = 1; i < X; i++)
+    {
+      if (cifre[i] == cifre[i - 1])
+      {
+        continue;
+      }
+      else
+      {
+        count1++;
+      }
+    }
+
+    for (int i = 1; i < X; i++)
+    {
+      if (cifre[i] == dubluraActuala)
+      {
+        continue;
+      }
+      else
+      {
+        dubluraActuala = -1;
+      }
+      if (cifre[i] == cifre[i - 1])
+      {
+        dubluraActuala = cifre[i];
+        count2++;
+      }
+    }
+
+    fout << count1 << endl;
+    fout << count2 << endl;
+    fout.close();
+  }
+  else
+  {
+    int max = -1, cifraAdaugata = 0, inFata = true, nrDeCifre=0;
+    long long numar = 0;
+
+    for (int i = 0; i < X; i++)
+    {
+      cifreCount[cifre[i]]++;
+    }
+    for (int i = 0; i < X; i++)
+    {
+      if (i > max && cifreCount[i] % 2 != 0 && cifreCount[i] != 0) 
+      {
+        max = i;
+      }
+    }
+    cifreCount[max]++;
+    for (int i = 0; i < X ; i++)
+    {
+      if (primul == true && cifreCount[i] != 0)
+      {
+        while (cifreCount[i] != 0)
+        {
+          nrDeCifre++;
+          if (inFata == true)
+          {
+            numar += i * pow(10, cifraAdaugata);
+            cifraAdaugata = cifraAdaugata + 2;
+            cifreCount[i]--;
+            inFata = false;
+          }
+          else
+          {
+            numar = numar * 10 + i;
+            cifreCount[i]--;
+            inFata = true;
+          }
+        }
+        primul = false;
+      }
+      if (primul == false && cifreCount[i] == 1 && cifreCount[i] != 0)
+      {
+        continue;
+      }
+      if (primul == false && cifreCount[i] != 1 && cifreCount[i] != 0)
+      {
+        if (i == max)
+        {
+          while (cifreCount[i] != 1)
+          {
+            nrDeCifre++;
+            if (inFata == true)
+            {
+              numar += i * pow(10, cifraAdaugata);
+              cifraAdaugata = cifraAdaugata + 2;
+              cifreCount[i]--;
+              inFata = false;
+              if(cifreCount[i] == 1){
+                inFata = true;
+                cifraAdaugata = cifraAdaugata -1;
+              }
+            }
+            else
+            {
+              numar = numar * 10 + i;
+              cifreCount[i]--;
+              inFata = true;
+            }
+          }
+        }
+        else
+        {
+          while (cifreCount[i] != 0)
+          {
+            nrDeCifre++;
+            if (inFata == true)
+            {
+              numar += i * pow(10, cifraAdaugata);
+              cifraAdaugata = cifraAdaugata + 2;
+              cifreCount[i]--;
+              inFata = false;
+            }
+            else
+            {
+              numar = numar * 10 + i;
+              cifreCount[i]--;
+              inFata = true;
+              // if(cifraAdaugata%2!=0){
+              //   cifraAdaugata+=2;
+              // }
+            }
+          }
+        }
+      }
+    }
+    fout<<numar;
+    fout.close();
+  }
+}
