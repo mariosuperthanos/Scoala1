@@ -102,6 +102,7 @@ int main()
       {
         continue;
       }
+      // cifrele mai mici sunt puse in mijloc, iar cele mai mari sunt puse la margine
       if (primul == false && cifreCount[i] != 1 && cifreCount[i] != 0)
       {
         if (i == max)
