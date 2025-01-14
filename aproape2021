@@ -1,0 +1,182 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("aproape.in");
+ofstream fout("aproape.out");
+
+vector<int> numere(int numar)
+{
+  int copie = numar;
+  int count = 0, N2 = numar;
+  while (N2 != 0)
+  {
+    count++;
+    N2 /= 10;
+  }
+
+  vector<int> variatii(0, 0);
+  int cifraCurenta = 0, c2 = 0;
+  while (numar != 0)
+  {
+    c2++;
+    cifraCurenta = numar % 10;
+    if (numar / 10 == 0)
+    {
+      int modificat = copie;
+      // exceptie pentru cifra din stanga care trebuie sa fie diferita de 0
+      if (cifraCurenta == 1 || cifraCurenta == 9)
+      {
+        if (cifraCurenta == 1)
+        {
+          modificat += pow(10, c2 - 1);
+          variatii.push_back(modificat);
+        }
+        if (cifraCurenta == 9)
+        {
+          modificat -= pow(10, c2 - 1);
+          variatii.push_back(modificat);
+        }
+      }
+      else
+      {
+        modificat += pow(10, c2 - 1);
+        variatii.push_back(modificat);
+        modificat -= pow(10, c2 - 1);
+        modificat -= pow(10, c2 - 1);
+        variatii.push_back(modificat);
+      }
+    }
+    else
+    {
+      int modificat = copie;
+      if (cifraCurenta == 0 || cifraCurenta == 9)
+      {
+        if (cifraCurenta == 0)
+        {
+          modificat += pow(10, c2 - 1);
+          variatii.push_back(modificat);
+        }
+        if (cifraCurenta == 9)
+        {
+          modificat -= pow(10, c2 - 1);
+          variatii.push_back(modificat);
+        }
+      }
+      else
+      {
+        modificat += pow(10, c2 - 1);
+        variatii.push_back(modificat);
+        modificat -= pow(10, c2 - 1);
+        modificat -= pow(10, c2 - 1);
+        variatii.push_back(modificat);
+      }
+    }
+    numar /= 10;
+  }
+  return variatii;
+}
+
+int main()
+{
+  int V, N, countNumere, count = 0;
+  fin >> V;
+  fin >> N;
+  vector<int> memo(100, 0);
+  // vector<int> cifreCount(X, 0);
+
+  // for (int i = 0; i < X; i++)
+  // {
+  //   fin >> cifre[i];
+  // }
+  fin.close();
+
+  // int count = 0, N2 = N;
+  // while (N2 != 0)
+  // {
+  //   count++;
+  //   N2 /= 10;
+  // }
+
+  if (V == 1)
+  {
+    while (N != 0)
+    {
+      count++;
+      N /= 10;
+    }
+    fout << count;
+    fout.close();
+  }
+  else if (V == 2)
+  {
+    int cifraCurenta = 0;
+    while (N != 0)
+    {
+      cifraCurenta = N % 10;
+      if (N / 10 == 0)
+      {
+        // exceptie pentru cifra din stanga care trebuie sa fie diferita de 0
+        if (cifraCurenta == 1 || cifraCurenta == 9)
+        {
+          count++;
+        }
+        else
+        {
+          count += 2;
+        }
+      }
+      else
+      {
+        if (cifraCurenta == 0 || cifraCurenta == 9)
+        {
+          count++;
+        }
+        else
+        {
+          count += 2;
+        }
+      }
+      N /= 10;
+    }
+    fout << count;
+  }
+  else if (V == 3)
+  {
+    bool adaugat = false;
+    vector<int> result(0,0);
+    vector<int> vecini = numere(N);
+    for (int i = 0; i < vecini.size(); i++)
+    {
+      vector<int> vecini2 = numere(vecini[i]);
+      for (int j = 0; j < vecini2.size(); j++)
+      {
+        adaugat = false;
+        // verificare
+        for (int k = 0; k < result.size(); k++)
+        {
+          if (result[k] == vecini2[j])
+          {
+            adaugat = true;
+            break;
+          }
+        }
+        if (adaugat == false)
+        {
+          result.push_back(vecini2[j]);
+        }
+      }
+    }
+
+    sort(result.begin(), result.end());
+    fout<< result.size();
+    fout.close();
+  }
+
+  // vector<int> x = numere(1904);
+  // fout << count;
+}
