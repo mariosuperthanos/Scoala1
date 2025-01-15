@@ -1,0 +1,41 @@
+/* eslint-disable */
+
+
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("pergament.in");
+ofstream fout("pergament.out");
+
+int main()
+{
+    int N, P, C;
+    fin>> C;
+    fin>> N;
+    fin>> P;
+    fin.close();
+    bool verticala = false;
+    vector<vector<int>> dimensiuni(100,vector<int>(2,0));
+    dimensiuni[0][0]=1;
+    dimensiuni[0][1]=1;
+    int i=1;
+
+    for(i = 1;i<N;i++){
+        if(verticala==false) {
+            dimensiuni[i][0] = dimensiuni[i-1][0];
+            dimensiuni[i][1] = dimensiuni[i-1][1]+ dimensiuni[i-1][0];
+            verticala=true;
+        } {
+            dimensiuni[i][0] = dimensiuni[i-1][1]+ dimensiuni[i-1][0];
+            dimensiuni[i][1] = dimensiuni[i-1][1];
+            verticala=false;
+        }
+    }
+    
+    return 0;
+}
