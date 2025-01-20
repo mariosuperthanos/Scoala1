@@ -1,0 +1,43 @@
+/* eslint-disable */
+
+
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("aproape.in");
+ofstream fout("aproape.out");
+
+int main()
+{
+    // elementului de pe o anumita pozitie i se adauga surplusul anterior, => suma minima a inaltimilor necesara pana la pozitia i este Hxi.
+    // deci, Si(suma tuturor inaltimilor pana la i) >= H x i, impartim la i -> Si/i >= H
+    // OBS: am ales sa folosesc suma prefixată, deoarece "elementele se acumuleaza"
+
+
+    int N, maxH=INT_MAX, current;
+    fin>> N;
+    vector<int> V(N, 0), prefixSums(N+1,0);
+    prefixSums[0]=0;
+    for(int i=0;i<N;i++) {
+      fin>> V[i];
+      prefixSums[i+1]=prefixSums[i]+V[i];
+    }
+    fin.close();
+
+    for(int i=0;i<N;i++) {
+      current=prefixSums[i+1]/(i+1);
+      if(maxH>current) {
+        maxH=current;
+      }
+    }
+
+    fout<< maxH;
+    fout.close();
+
+    return 0;
+}
