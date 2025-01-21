@@ -1,0 +1,105 @@
+/* eslint-disable */
+
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("spiralmatrix.in");
+ofstream fout("spiralmatrix.out");
+
+int main()
+{
+  long long N, patrat, primul, alDoilea, coloana = 0, rand = 0, primul2 = 1, val = 1, lat = N, primulRand, primulColoana, alDoileaRand=-1, alDoileaColoana;
+  fin >> N;
+  patrat = pow(N, 2);
+  // matricea am creat-o doar pentru debugging
+  // vector<vector<int>> matriceSpirala(N, vector<int>(N, 0));
+
+  long long stangaSusColoana = 0, stangaSusRand = 0, dreaptaJosColoana = N, dreaptaJosRand = N;
+
+  if (patrat % 2 == 1)
+  {
+    primul = (patrat - 1) / 2;
+    alDoilea = primul + 2;
+  }
+  else
+  {
+    primul = patrat / 2;
+    alDoilea = primul + 1;
+  }
+
+  while (alDoileaRand==-1)
+  {
+    rand=stangaSusRand;
+    for (coloana = stangaSusColoana; coloana < dreaptaJosColoana; coloana++)
+    {
+      // matriceSpirala[rand][coloana] = val;
+      if(val==primul){
+        primulRand=rand;
+        primulColoana=coloana;
+      }
+      if(val==alDoilea){
+        alDoileaRand=rand;
+        alDoileaColoana=coloana;
+      }
+      val++;
+    }
+    coloana = dreaptaJosColoana - 1;
+    for (rand = stangaSusRand + 1; rand < dreaptaJosRand; rand++)
+    {
+      // matriceSpirala[rand][coloana] = val;
+      if(val==primul){
+        primulRand=rand;
+        primulColoana=coloana;
+      }
+      if(val==alDoilea){
+        alDoileaRand=rand;
+        alDoileaColoana=coloana;
+      }
+      val++;
+    }
+    val--;
+    rand = dreaptaJosRand - 1;
+    for (coloana = dreaptaJosColoana - 1; coloana >= stangaSusColoana; coloana--)
+    {
+      // matriceSpirala[rand][coloana] = val;
+      if(val==primul){
+        primulRand=rand;
+        primulColoana=coloana;
+      }
+      if(val==alDoilea){
+        alDoileaRand=rand;
+        alDoileaColoana=coloana;
+      }
+      val++;
+    }
+    coloana = stangaSusColoana;
+    for (rand = dreaptaJosRand - 2; rand >= stangaSusRand+1; rand--)
+    {
+      // matriceSpirala[rand][coloana] = val;
+      if(val==primul){
+        primulRand=rand;
+        primulColoana=coloana;
+      }
+      if(val==alDoilea){
+        alDoileaRand=rand;
+        alDoileaColoana=coloana;
+      }
+      val++;
+    }
+    stangaSusColoana++;
+    stangaSusRand++;
+    dreaptaJosColoana--;
+    dreaptaJosRand--;
+  }
+
+  fout<< primulRand+1<< " " << primulColoana+1<<endl;
+  fout<< alDoileaRand+1<< " " << alDoileaColoana+1<<endl;
+  fout.close();
+  
+  return 0;
+}
