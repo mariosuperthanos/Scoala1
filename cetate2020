@@ -1,0 +1,156 @@
+/* eslint-disable */
+
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+ifstream fin("cetate.in");
+ofstream fout("cetate.out");
+
+int main()
+{
+  int C, N, M, K, maxVal = INT_MIN, maxCurrent;
+  int count = 0, maxSecventa = INT_MIN, secventaCurenta, currentVal;
+  int stangaSusRand, stangaSusColoana, dreaptaJosRand, dreaptaJosColoana, stangaSusRandCandidat, stangaSusColoanaCandidat,
+      dreaptaJosRandCandidat, dreaptaJosColoanaCandidat;
+  fin >> C;
+  fin >> N >> M >> K;
+  vector<vector<int>> m(N, vector<int>(M, 0));
+  vector<int> sums(M, 0);
+  // copie nu e 0-based
+
+  for (int i = 0; i < N; i++)
+  {
+    for (int j = 0; j < M; j++)
+    {
+      fin >> m[i][j];
+    }
+  }
+  fin.close();
+  vector<vector<int>> copie(N, vector<int>(M + 1, 0));
+
+  if (C == 1)
+  {
+    // submatrice de suma maxima cu lat = k
+    for (int col = 0; col <= M - K; col++)
+    {
+      stangaSusColoanaCandidat = col + 1;
+      // reset la matrice
+      // for (int i = 0; i < N+1; i++)
+      // {
+      //   for (int j = 0; j < M+1; j++)
+      //   {
+      //     copie[i][j]=0;
+      //   }
+      // }
+      // coloana
+      // col=0
+      for (int k = 0; k <= N - K; k++)
+      {
+        stangaSusRandCandidat = k + 1;
+        // pt urmatoarele K(latura) coloane:
+        for (int col2 = col; col2 < col + K; col2++)
+        {
+          maxCurrent = 0;
+          // toate laturile posibile pe verticala(eg. pt k=3: 0-3, 1-4,...)
+          for (int rand = k; rand < k + K; rand++)
+          {
+            copie[rand][col2 + 1] = copie[rand][col2] + m[rand][col2];
+            if (col2 == col + K - 1)
+            {
+              maxCurrent += copie[rand][col2 + 1];
+            }
+          }
+        }
+        if (maxCurrent > maxVal)
+        {
+          maxVal = maxCurrent;
+          stangaSusColoana = stangaSusColoanaCandidat;
+          stangaSusRand = stangaSusRandCandidat;
+          dreaptaJosColoana = stangaSusColoana + K - 1;
+          dreaptaJosRand = stangaSusRand + K - 1;
+        }
+      }
+    }
+    fout << maxVal << endl;
+    fout << stangaSusRand << ' ' << stangaSusColoana << ' ';
+    fout << dreaptaJosRand << ' ' << dreaptaJosColoana;
+    fout.close();
+  }
+  else
+  {
+    // kadanes 2D algorithm + kadanes 1D algorithm(pentru coloana) cu conditia sa aiba size<=K, cum se specifica in problema
+    for (int col = 0; col < M; col++)
+    {
+      dreaptaJosColoanaCandidat = col;
+      stangaSusColoanaCandidat = col;
+      // reset la matrice
+      for (int i = 0; i < N; i++)
+      {
+        for (int j = 0; j < M+1; j++)
+        {
+          copie[i][j]=0;
+        }
+      }
+      // coloana
+      // col=0
+      for (int col2 = col; col2 < col + K; col2++)
+      {
+        if(col2>M) {
+          break;
+        }
+        for (int rand = 0; rand < N; rand++)
+        {
+          copie[rand][col2 + 1] = copie[rand][col2] + m[rand][col2];
+        }
+      }
+
+      // pentru fiecare coloana, kadane 1D algorithm + limita de k elemente
+      for (int col3 = col+1; col3 < col + K + 1; col3++)
+      {
+        if (col3 > M) break;
+        count = 1;
+        secventaCurenta = 0;
+        // maxSecventa = copie[0][col3];
+        for (int rand = 0; rand < N; rand++)
+        {
+          currentVal = copie[rand][col3];
+          int test = secventaCurenta + currentVal;
+          // daca secventa nu depaseste limita => adaugam valoarea la suma
+          if (test > currentVal && count < K)
+          {
+            dreaptaJosRandCandidat += 1;
+            secventaCurenta += currentVal;
+            count++;
+          }
+          else
+          {
+            // altfel incepem secventa noua
+            dreaptaJosRandCandidat = rand;
+            stangaSusRandCandidat = rand;
+            secventaCurenta = currentVal;
+            count = 1;
+          }
+          if (maxSecventa < secventaCurenta)
+          {
+            stangaSusRand = stangaSusRandCandidat;
+            stangaSusColoana = stangaSusColoanaCandidat;
+            dreaptaJosColoana = col3-1;
+            dreaptaJosRand = dreaptaJosRandCandidat;
+            maxSecventa = secventaCurenta;
+          }
+        }
+      }
+    }
+    fout << maxSecventa << endl;
+    fout << stangaSusRand + 1 << ' ' << stangaSusColoana + 1 << ' ';
+    fout << dreaptaJosRand + 1 << ' ' << dreaptaJosColoana + 1;
+    fout.close();
+  }
+
+  return 0;
+}
