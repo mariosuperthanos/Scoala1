@@ -1,0 +1,146 @@
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+using namespace std;
+ifstream fin("aproape.in");
+ofstream fout("aproape.out");
+
+vector<vector<int>> prefixSums(vector<vector<int>> mine, int L, int C)
+{
+  vector<vector<int>> sums(L, vector<int>(C, 0));
+
+  for (int i = 0; i < L; i++)
+  {
+    for (int j = 0; j < C; j++)
+    {
+      for (int i2 = 0; i2 <= i; i2++)
+      {
+        for (int j2 = 0; j2 <= j; j2++)
+        {
+          sums[i][j] += mine[i2][j2];
+        }
+      }
+    }
+  }
+
+  return sums;
+}
+
+vector<vector<int>> divizoriFn(int M, int R, int C)
+{
+  vector<vector<int>> divizori(0);
+  for (int i = 1; i <= M; i++)
+  {
+    if (M % i == 0 && i <= R && M / i <= C)
+    {
+      vector<int> local(2, 0);
+      local[0] = i;
+      local[1] = M / i;
+      divizori.push_back(local);
+    }
+  }
+  return divizori;
+}
+
+int main()
+{
+  int V, M, L, C, maxVal = -1;
+  fin >> V;
+  fin >> L >> C;
+  fin >> M;
+  vector<vector<int>> mine(M, vector<int>(2, 0));
+
+  for (int i = 0; i < M; i++)
+  {
+    for (int j = 0; j < 2; j++)
+    {
+      fin >> mine[i][j];
+    }
+  }
+  fin.close();
+  if (V == 1)
+  {
+    vector<int> count(L + 1, 0);
+    vector<int> result(0, 0);
+    for (int i = 0; i < M; i++)
+    {
+      count[mine[i][0]]++;
+    }
+
+    for (int i = 0; i < L + 1; i++)
+    {
+      if (maxVal < count[i])
+      {
+        maxVal = count[i];
+      }
+    }
+    for (int i = 0; i < L + 1; i++)
+    {
+      if (maxVal == count[i])
+      {
+        result.push_back(i);
+      }
+    }
+    for (int i = 0; i < result.size(); i++)
+    {
+      fout << result[i] << " ";
+    }
+  }
+  else
+  {
+    bool gasit = false;
+    vector<vector<int>> coords(L, vector<int>(C, 0));
+    for (int i = 0; i < M; i++)
+    {
+      coords[mine[i][0] - 1][mine[i][1] - 1] = 1;
+    }
+    // pentru toate combinatiile de submatrici dreptunghiulare
+    // for(int i=1;i<)
+    vector<vector<int>> sums = prefixSums(coords, L, C);
+    vector<vector<int>> divizori = divizoriFn(M, L, C);
+
+    for (int i = 0; i < divizori.size(); i++)
+    {
+      if (gasit == true)
+      {
+        break;
+      }
+      divizori[i][0] -= 1;
+      divizori[i][1] -= 1;
+      for (int rand = divizori[i][0]; rand < L; rand++)
+      {
+        for (int coloana = divizori[i][1]; coloana < C; coloana++)
+        {
+          if (sums[rand][coloana] == M)
+          {
+            int count = 0;
+            for (int rand2 = rand - divizori[i][0]; rand2 <= rand; rand2++)
+            {
+              for (int coloana2 = coloana - divizori[i][1]; coloana2 <= coloana; coloana2++)
+              {
+                if (coords[rand2][coloana2] == 1)
+                {
+                  count++;
+                }
+              }
+            }
+            fout << M - count;
+            gasit = true;
+          }
+          if (gasit == true)
+          {
+            break;
+          }
+        }
+        if (gasit == true)
+        {
+          break;
+        }
+      }
+    }
+  }
+  fout.close();
+  return 0;
+}
