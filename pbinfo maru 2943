@@ -1,0 +1,49 @@
+
+
+/* eslint-disable */
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+  int A, B, C, D, n, T, S=0;
+  cin>> T >> n>> A>> B>> C>> D;
+  vector<vector<int>> matrice(n, vector<int>(n,0));
+
+  for(int i=1;i<=n;i++){
+    for(int j=1;j<=n;j++) {
+      matrice[i-1][j-1]=(A * i + B * j + C) % D;
+    }
+  }
+
+  // pentru fiecare coloana 
+  for(int coloana1=0;coloana1<n;coloana1++) {
+    vector<vector<int>> prefixSums(n, vector<int>(n+1,0));
+    // pentru urmatoarele coloane
+    for(int coloana2=coloana1;coloana2<n;coloana2++) {
+      for(int rand=0;rand<n;rand++){
+        prefixSums[rand][coloana2+1] = prefixSums[rand][coloana2]+matrice[rand][coloana2];
+      }
+      // generez toate secventele posibile prin brute force pe o anumita coloana
+      int currentSum = 0;
+      for(int i=0;i<n;i++){
+        currentSum=0;
+        for(int j=i;j<n;j++){
+          currentSum+=prefixSums[j][coloana2+1];
+          if(currentSum<=T){
+            S++;
+          } else{
+            break;
+          }
+        }
+      }
+    }
+  }
+  cout<< S;
+
+  return 0;
+}
