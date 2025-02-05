@@ -1,0 +1,50 @@
+/* eslint-disable */
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+  long long n,s,curent, sum=0, local=0, maxSubset=-2000000000;
+  cin>> n>> s;
+  vector<long long> sir(n,0);
+  for(int i=0;i<n;i++){
+    cin>> sir[i];
+  }
+  // pentru testing
+  // n=5;
+  // s=20;
+  // vector<int> sir={17, 16, 10, 12, 14};
+  vector<long long> memo;
+  memo.push_back(0);
+  vector<bool> dp(s,0);
+  dp[0]=true;
+
+
+
+  // pentru fiecare element al sirului
+  for(int i=0;i<n;i++) {
+    curent=sir[i];
+    local=memo.size();
+    // pentru urmatoarele elemente
+    for(int j=0;j<local;j++) {
+      sum=memo[j]+sir[i];
+      if(sum<=s){
+        if(sum>maxSubset){
+          maxSubset=sum;
+        }
+        if(sum<dp.size()){
+          dp[sum]=true;
+        }
+        // adaug elementul la memo
+        memo.push_back(sum);
+      }
+    }
+  }
+  cout<<maxSubset;
+  
+  return 0;
+}
