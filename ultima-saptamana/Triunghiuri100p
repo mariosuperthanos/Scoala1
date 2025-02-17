@@ -1,0 +1,65 @@
+
+/* eslint-disable */
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <bits/stdc++.h>
+
+using namespace std;
+long long n, counter=0,j=0;
+vector<long long> v(0, 0);
+
+//test
+// long long n=5, j=0, counter=0;
+// vector<long long> v={3, 5, 10, 7, 6 };
+
+
+void citire()
+{
+  cin >> n;
+  v.resize(n);
+  for (long long i = 0; i < n; i++)
+  {
+    cin >> v[i];
+  }
+}
+
+long long binarySearch(int number,int limitPoz) {
+  while(j>0 && j>limitPoz) {
+    if(v[j]<number) {
+      return j;
+    }
+    j--;
+  }
+  return -1;
+}
+
+void rezolvare()
+{
+  sort(v.begin(), v.end());
+  long long sum=0, lat1Val, lat2Val;
+  j=n-1;
+  for(long long lat1=0;lat1<n-2;lat1++){
+    lat1Val=v[lat1];
+    for(long long lat2=lat1+1;lat2<n-1;lat2++) {
+      lat2Val=v[lat2];
+      //reset j
+      j=n-1;
+      sum=lat1Val+lat2Val;
+      long long pozCautat = binarySearch(sum, lat2);
+      if(pozCautat!=-1) {
+        counter+=(pozCautat-lat2);
+      }
+    }
+  }
+}
+
+int main()
+{
+  citire();
+  rezolvare();
+  cout<< counter;
+  return 0;
+}
