@@ -1,0 +1,93 @@
+
+/* eslint-disable */
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <bits/stdc++.h>
+
+using namespace std;
+long long n, val, s, rez, minim = 1000000002, v[200002];
+// vector<long long> v(0, 0);
+
+ifstream fin("secvmaxval.in");
+ofstream fout("secvmaxval.out");
+
+// test
+//  long long n=5, j=0, counter=0;
+//  vector<long long> v={3, 5, 10, 7, 6 };
+
+void citire()
+{
+  fin >> n >> val;
+  // v.resize(n);
+  for (long long i = 0; i < n; i++)
+  {
+    fin >> v[i];
+    s += v[i];
+    if (minim > v[i])
+    {
+      minim = v[i];
+    }
+  }
+  fin.close();
+}
+
+void rezolvare()
+{
+  if(val==minim) {
+    rez=1;
+    return;
+  }
+  if (val < minim)
+  {
+    rez = 0;
+    return;
+  }
+  if (s <= val)
+  {
+    rez = n;
+    return;
+  }
+  long long lungimeaCurenta = 0, lungimeMaxima = 0, sumaCurenta;
+  for (long long i = 0; i < n; i++)
+  {
+    lungimeaCurenta = 0;
+    sumaCurenta = 0;
+    if (n - i < lungimeMaxima)
+    {
+      break;
+    }
+    for (long long j = i; j < n; j++)
+    {
+      sumaCurenta += v[j];
+      lungimeaCurenta++;
+      // if (lungimeaCurenta > lungimeMaxima && sumaCurenta <= val)
+      // {
+      //   lungimeMaxima = lungimeaCurenta;
+      //   rez = lungimeMaxima;
+      // }
+      // if (sumaCurenta > val)
+      // {
+      //   break;
+      // }
+      if(sumaCurenta>val){
+        if(lungimeMaxima<lungimeaCurenta-1){
+          lungimeMaxima=lungimeaCurenta-1;
+          rez=lungimeMaxima;
+        }
+        break;
+      }
+    }
+  }
+}
+
+int main()
+{
+  citire();
+  rezolvare();
+  fout << rez;
+  fout.close();
+  return 0;
+}
