@@ -1,0 +1,116 @@
+// sliding window approach 
+
+
+/* eslint-disable */
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <string>
+#include <map>
+#include <unordered_map>
+
+using namespace std;
+long long n, k, C, counter = 0;
+string inputText, rez="";
+unordered_map<char, int> hashmap;
+// map<string, int> hashmap;
+
+// vector<long long> v(0, 0);
+
+ifstream fin("criptografie.in");
+ofstream fout("criptografie.out");
+
+// struct literaAparitie
+// {
+//   int numarAparitii;
+//   char litera;
+// };
+
+// test
+//  long long n=5, j=0, counter=0;
+//  vector<long long> v={3, 5, 10, 7, 6 };
+
+void citire()
+{
+  fin >> C;
+  fin >> k >> n;
+  fin >> inputText;
+  fin.close();
+}
+
+void rezolvareC1()
+{
+  int index = 0, p=0;
+  bool gasit = false;
+  // optimizare
+  for (int i = 0; i < inputText.size(); i++)
+  {
+    char literaCurenta = inputText[i];
+    hashmap[literaCurenta]++;
+    
+    while(hashmap[literaCurenta]>k) {
+      hashmap[inputText[p]]--;
+      p++;
+    }
+
+    counter += (i-p+1);
+  }
+}
+
+void rezolvareC2()
+{
+  int lMax=0;
+  string current;
+  bool gasit;
+  for (int i = 0; i < inputText.size(); i++)
+  {
+    vector<char> memoCaractere;
+    current="";
+    for (int j = i; j < inputText.size(); j++)
+    {
+      char literaCurenta = inputText[j];
+      gasit = false;
+      for (int k = 0; k < memoCaractere.size(); k++)
+      {
+        if (memoCaractere[k] == literaCurenta)
+        {
+          gasit = true;
+          break;
+        }
+      }
+      if(gasit==true) {
+        break; // literele trebuie sa fie distincte
+      } else{
+        memoCaractere.push_back(literaCurenta);
+        current+=literaCurenta;
+        // 1. verificam stringul curent daca are lungime maxima
+        if(lMax<current.size()) {
+          lMax = current.size();
+          rez=current;
+        }else if(lMax==current.size()){
+          // 2. verificam daca stringul curent e primul sau nu din punct de vedere lexicografic
+          if(current<rez){
+            rez=current;
+          }
+        }
+      }
+    }
+  }
+}
+
+int main()
+{
+  citire();
+  if(C==1){
+    rezolvareC1();
+    fout << counter;
+  } else {
+    rezolvareC2();
+    fout<< rez;
+  }
+  fout.close();
+  return 0;
+}
