@@ -1,0 +1,137 @@
+// brute force approach
+
+/* eslint-disable */
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <string>
+#include <map>
+
+using namespace std;
+long long n, k, C, counter = 0;
+string inputText, rez="";
+// map<string, int> hashmap;
+
+// vector<long long> v(0, 0);
+
+ifstream fin("criptografie.in");
+ofstream fout("criptografie.out");
+
+struct literaAparitie
+{
+  int numarAparitii;
+  char litera;
+};
+
+// test
+//  long long n=5, j=0, counter=0;
+//  vector<long long> v={3, 5, 10, 7, 6 };
+
+void citire()
+{
+  fin >> C;
+  fin >> k >> n;
+  fin >> inputText;
+  fin.close();
+}
+
+void rezolvareC1()
+{
+  int index = 0;
+  bool gasit = false;
+  for (int i = 0; i < inputText.size(); i++)
+  {
+    vector<literaAparitie> hashmap;
+    for (int j = i; j < inputText.size(); j++)
+    {
+      char literaCurenta = inputText[j];
+      gasit = false;
+      literaAparitie literaDeAdaugat;
+      for (int k = 0; k < hashmap.size(); k++)
+      {
+        if (hashmap[k].litera == inputText[j])
+        {
+          gasit = true;
+          index = k;
+        }
+      }
+      if (gasit == false)
+      {
+        literaDeAdaugat.litera = inputText[j];
+        literaDeAdaugat.numarAparitii = 1;
+        hashmap.push_back(literaDeAdaugat);
+        counter++;
+      }
+      else
+      {
+        hashmap[index].numarAparitii++;
+        if (hashmap[index].numarAparitii <= k)
+        {
+          counter++;
+        }
+        else
+        {
+          break;
+        }
+      }
+    }
+  }
+}
+
+void rezolvareC2()
+{
+  int lMax=0;
+  string current;
+  bool gasit;
+  for (int i = 0; i < inputText.size(); i++)
+  {
+    vector<char> memoCaractere;
+    current="";
+    for (int j = i; j < inputText.size(); j++)
+    {
+      char literaCurenta = inputText[j];
+      gasit = false;
+      for (int k = 0; k < memoCaractere.size(); k++)
+      {
+        if (memoCaractere[k] == literaCurenta)
+        {
+          gasit = true;
+          break;
+        }
+      }
+      if(gasit==true) {
+        break; // literele trebuie sa fie distincte
+      } else{
+        memoCaractere.push_back(literaCurenta);
+        current+=literaCurenta;
+        // 1. verificam stringul curent daca are lungime maxima
+        if(lMax<current.size()) {
+          lMax = current.size();
+          rez=current;
+        }else if(lMax==current.size()){
+          // 2. verificam daca stringul curent e primul sau nu din punct de vedere lexicografic
+          if(current<rez){
+            rez=current;
+          }
+        }
+      }
+    }
+  }
+}
+
+int main()
+{
+  citire();
+  if(C==1){
+    rezolvareC1();
+    fout << counter;
+  } else {
+    rezolvareC2();
+    fout<< rez;
+  }
+  fout.close();
+  return 0;
+}
